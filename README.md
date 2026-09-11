@@ -36,10 +36,32 @@ Os dados são enviados e recebidos no formato **JSON**, e a comunicação com o 
 ```text
 servidor/
 ├── .gitignore
-├── index.php
+├── produtos.php
 ├── teste.py
 └── README.md
 ```
+## 🔌 Conexão com o banco de dados
+
+O projeto utiliza o arquivo `conexao.php` para realizar a conexão entre o servidor PHP e o banco de dados PostgreSQL.
+
+A conexão é feita utilizando a classe **PDO**, informando o endereço do servidor, usuário, banco de dados, senha e a porta utilizada pelo PostgreSQL.
+
+### Exemplo de conexão
+
+```php
+<?php
+
+$host = "seu_ip";
+$usuario = "seu_usuario";
+$banco = "seu_banco";
+$senha = "sua_senha";
+
+$pdo = new PDO(
+    "pgsql:host=$host;port=5432;dbname=$banco",
+    $usuario,
+    $senha
+);
+?>
 
 > O arquivo `conexao.php` não está no repositório, pois foi incluído no `.gitignore` para proteger as informações de acesso ao banco de dados.
 
