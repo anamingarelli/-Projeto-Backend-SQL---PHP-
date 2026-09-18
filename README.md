@@ -1,234 +1,223 @@
-# 🖥️  Projeto Backend + SQL - PHP 
+# 🎮 API de Catálogo de Games — Level Up Games
 
-> Projeto acadêmico desenvolvido durante o curso de **Desenvolvimento de Sistemas — SENAI**.
+API desenvolvida para a **Level Up Games**, uma loja de jogos que vende pelo site e pelo Instagram.
 
-## 📌 Sobre o projeto
+O objetivo do projeto é **centralizar o catálogo de games em uma única API**, evitando divergências entre os canais de venda e problemas como a venda de jogos que já estão esgotados.
 
-Este projeto consiste na criação de um servidor utilizando **PHP**, integrado a um banco de dados **PostgreSQL**.
+## 📌 Objetivo
 
-A aplicação funciona como uma API simples para gerenciamento de produtos, permitindo cadastrar e consultar informações por meio de requisições HTTP.
+Criar uma API de catálogo de games utilizando **PHP, PostgreSQL e JSON**, permitindo:
 
-Os dados são enviados e recebidos no formato **JSON**, e a comunicação com o banco de dados é realizada utilizando **PDO**.
+- Cadastrar jogos no banco de dados;
+- Consultar todos os jogos cadastrados;
+- Organizar os jogos em ordem alfabética pelo título;
+- Centralizar as informações de catálogo e estoque.
 
-## ⚙️ Funcionalidades
-
-* 📦 Cadastro de produtos;
-* 🔎 Consulta de produtos cadastrados;
-* 🗄️ Integração com PostgreSQL;
-* 🔗 Conexão com banco utilizando PDO;
-* 📄 Recebimento de dados em JSON;
-* 📤 Retorno de dados em JSON;
-* 🌐 Utilização dos métodos HTTP `GET` e `POST`.
+---
 
 ## 🛠️ Tecnologias utilizadas
 
-* **PHP**
-* **PostgreSQL**
-* **PDO**
-* **JSON**
-* **HTTP**
-* **Python**
-* **Biblioteca Requests**
-* **API ViaCEP**
+- **PHP**
+- **PostgreSQL**
+- **PDO**
+- **JSON**
+- **Thunder Client** para testes da API
 
+<<<<<<< HEAD
 
 ## 📂 Estrutura do projeto
+=======
+---
+
+## 📁 Estrutura do projeto
+>>>>>>> 1e8d39db0a55777e15f1d57d3608131293261e1d
 
 ```text
-servidor/
-├── .gitignore
-├── produtos.php
-├── teste.py
-└── README.md
+levelup/
+│
+├── conexao.php
+├── jogos.php
+└── banco.sql
 ```
-## 🔌 Conexão com o banco de dados
 
-O projeto utiliza o arquivo `conexao.php` para realizar a conexão entre o servidor PHP e o banco de dados PostgreSQL.
+### `conexao.php`
 
-A conexão é feita utilizando a classe **PDO**, informando o endereço do servidor, usuário, banco de dados, senha e a porta utilizada pelo PostgreSQL.
+Responsável por realizar a conexão da aplicação com o banco de dados PostgreSQL.
 
-### Exemplo de conexão
+### `jogos.php`
 
+Contém os endpoints da API para cadastro e consulta dos jogos.
+
+### `banco.sql`
+
+Contém o comando SQL utilizado para criar a tabela `jogos`.
+
+---
+
+# 🗄️ Banco de Dados
+
+O banco de dados utilizado no projeto é:
+
+```text
+levelup
+```
+
+A tabela principal é:
+
+```text
+jogos
+```
+
+### Estrutura da tabela
+
+| Coluna | Tipo | Descrição |
+|---|---|---|
+| `id` | INTEGER | Identificador do jogo |
+| `titulo` | VARCHAR | Nome do jogo |
+| `plataforma` | VARCHAR | Plataforma do jogo |
+| `genero` | VARCHAR | Gênero do jogo |
+| `desenvolvedora` | VARCHAR | Empresa desenvolvedora |
+| `ano_lancamento` | INTEGER | Ano de lançamento |
+| `preco` | DECIMAL | Preço do jogo |
+| `estoque` | INTEGER | Quantidade disponível em estoque |
+
+
+### Código Utilizado para Criação da Tabela
 ```php
-<?php
-
-$host = "seu_ip";
-$usuario = "seu_usuario";
-$banco = "seu_banco";
-$senha = "sua_senha";
-
-$pdo = new PDO(
-    "pgsql:host=$host;port=5432;dbname=$banco",
-    $usuario,
-    $senha
+CREATE TABLE produtos(
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
+    titulo VARCHAR(60) NOT NULL,
+    plataforma VARCHAR(60) NOT NULL,
+    genero VARCHAR(60) NOT NULL,
+    desenvolvedora VARCHAR(60) NOT NULL,
+    ano_lancamento INT NOT NULL DEFAULT 0,
+    preco NUMERIC(10,2) NOT NULL,
+    estoque INT NOT NULL DEFAULT 0
 );
-?>
 
-> O arquivo `conexao.php` não está no repositório, pois foi incluído no `.gitignore` para proteger as informações de acesso ao banco de dados.
+```
+---
 
-## 🔌 API de Produtos
+# 🔌 API
 
-### 📥 POST — Cadastrar produto
+A API possui dois métodos principais:
 
-Utilizado para cadastrar um novo produto no banco de dados.
+## POST — Cadastrar jogo
 
-**Exemplo de requisição:**
+Utilizado para cadastrar um novo jogo no catálogo.
 
-```http
-POST /
-Content-Type: application/json
+**Endpoint:**
+
+```text
+POST /jogos.php
 ```
 
-**Dados enviados:**
+### Exemplo de JSON:
 
 ```json
 {
-    "nome": "Caderno",
-    "preco": 25.90
+    "titulo": "Minecraft",
+    "plataforma": "PC",
+    "genero": "Sandbox",
+    "desenvolvedora": "Mojang",
+    "ano_lancamento": 2011,
+    "preco": 99.90,
+    "estoque": 25
 }
 ```
 
-**Resposta:**
+### Resposta esperada:
 
 ```json
 {
-    "Mensagem": "Produto cadastrado com sucesso!✅"
+    "mensagem": "Jogo cadastrado com sucesso!🎮✅"
 }
 ```
 
-### 📤 GET — Consultar produtos
+### Imagem de exemplo
 
-Utilizado para consultar os produtos cadastrados no banco de dados.
+![alt text](image-2.png)
+---
 
-**Exemplo de requisição:**
+## GET — Listar jogos
 
-```http
-GET /
+Utilizado para consultar todos os jogos cadastrados no banco de dados.
+
+**Endpoint:**
+
+```text
+GET /jogos.php
 ```
 
-**Exemplo de resposta:**
+Os jogos são retornados **em ordem alfabética pelo título**.
+
+### Exemplo de resposta:
 
 ```json
 [
     {
         "id": 1,
-        "nome": "Caderno",
-        "preco": "25.90"
-    },
-    {
-        "id": 2,
-        "nome": "Caneta",
-        "preco": "3.50"
+        "titulo": "Minecraft",
+        "plataforma": "PC",
+        "genero": "Sandbox",
+        "desenvolvedora": "Mojang",
+        "ano_lancamento": 2011,
+        "preco": "99.90",
+        "estoque": 25
     }
 ]
 ```
 
-## 🗄️ Banco de dados
+---
 
-O projeto utiliza o **PostgreSQL** para armazenar os produtos.
+# 🧪 Testes
 
-A tabela `produtos` possui os seguintes campos:
+Foram realizados testes utilizando o **Thunder Client**.
 
-| Campo   | Descrição                |
-| ------- | ------------------------ |
-| `id`    | Identificador do produto |
-| `nome`  | Nome do produto          |
-| `preco` | Preço do produto         |
+A atividade solicita o cadastro de **5 jogos** e a realização dos testes dos métodos POST e GET.
 
-### Estrutura da tabela
+## POST
 
-```sql
-CREATE TABLE produtos (
-    id SERIAL PRIMARY KEY,
-    nome VARCHAR(255) NOT NULL,
-    preco DECIMAL(10,2) NOT NULL
-);
-```
+Print do cadastro de um jogo realizado no Thunder Client:
 
-## 🔄 Funcionamento da API
+### 📸 Resultado do POST
 
-```text
-Cliente
-   │
-   │ Requisição HTTP
-   ▼
-Servidor PHP
-   │
-   ├── POST → Cadastra produto
-   │
-   └── GET → Consulta produtos
-   │
-   ▼
-PostgreSQL
-   │
-   ▼
-Resposta em JSON
-```
-
-## 🧪 Teste com API externa
-
-Durante a atividade, também foi realizado um teste utilizando **Python** e a API pública **ViaCEP**.
-
-O programa recebe um CEP informado pelo usuário, realiza uma requisição HTTP e utiliza os dados retornados em formato JSON para exibir as informações do endereço.
-
-### 🔹 Funcionamento
-
-```text
-CEP informado pelo usuário
-          ↓
-Requisição HTTP para o ViaCEP
-          ↓
-Dados retornados em JSON
-          ↓
-Informações do endereço
-          ↓
-Exibição no terminal
-```
-
-### 🐍 Tecnologias utilizadas no teste
-
-* Python
-* Biblioteca `requests`
-* API ViaCEP
-* JSON
-* Requisições HTTP
-
-### 📌 Exemplo
-
-```text
-Digite o seu CEP: 13465-000
-
-Você mora na Rua ... no bairro ... na cidade Americana
-no estado de SP na região Sudeste
-```
-
-O teste teve como objetivo praticar o **consumo de APIs externas**, realizando requisições e trabalhando com os dados recebidos em JSON.
-
-## 🎯 Objetivos da atividade
-
-A atividade teve como objetivo colocar em prática conceitos de:
-
-* Desenvolvimento de servidores;
-* APIs;
-* Requisições HTTP;
-* PHP;
-* PostgreSQL;
-* PDO;
-* JSON;
-* Consumo de APIs externas;
-* Python.
-
-## 🔐 Segurança
-
-O arquivo `conexao.php` foi adicionado ao `.gitignore` porque contém informações utilizadas para realizar a conexão com o banco de dados.
-
-Em projetos reais, informações sensíveis como senhas e credenciais devem ser protegidas e não devem ser publicadas em repositórios públicos.
-
-## 👩‍💻 Projeto acadêmico
-
-**Curso:** Desenvolvimento de Sistemas
-**Instituição:** SENAI
+![alt text](image-1.png)
 
 ---
 
-⭐ Projeto desenvolvido para fins acadêmicos e de aprendizado.
+## GET
+
+Print da listagem dos jogos cadastrados realizada no Thunder Client:
+
+### 📸 Resultado do GET
+
+### Exemplo:
+![alt text](image-7.png)
+
+![alt text](image-6.png)
+
+
+### Resultado da Tabela
+![alt text](image-9.png)
+---
+
+# 📦 Entrega
+
+O projeto contém os arquivos e testes solicitados na atividade:
+
+- ✅ Comando SQL da tabela;
+- ✅ `conexao.php`;
+- ✅ `jogos.php`;
+- ✅ Cadastro de 5 jogos;
+- ✅ Print do teste POST;
+- ✅ Print do teste GET.
+
+---
+
+## 👩‍💻 Projeto acadêmico
+
+**Atividade:** API de Catálogo de Games  
+**Empresa fictícia:** Level Up Games  
+**Tecnologias:** PHP + PostgreSQL  
+**Objetivo:** Centralização do catálogo de jogos
