@@ -31,6 +31,7 @@ Os dados são enviados e recebidos no formato **JSON**, e a comunicação com o 
 * **Biblioteca Requests**
 * **API ViaCEP**
 
+
 ## 📂 Estrutura do projeto
 
 ```text

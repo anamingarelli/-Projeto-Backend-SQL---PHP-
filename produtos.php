@@ -6,6 +6,8 @@ require "conexao.php";
 
 $metodo = $_SERVER["REQUEST_METHOD"];
 
+
+
 if($metodo == "POST"){
     $json = file_get_contents("php://input");
 
